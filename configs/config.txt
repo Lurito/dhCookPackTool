@@ -1,0 +1,4 @@
+{
+    "ue_program": "C:\\Program Files\\Epic Games\\UE_4.26",
+    "ue_project": "path\\to\\your\\Unreal Projects\\DreadHungerSkin"
+}
