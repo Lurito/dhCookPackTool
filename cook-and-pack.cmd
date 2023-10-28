@@ -1,28 +1,28 @@
-@echo off & setlocal
+::                                DH 烘焙打包工具   
+::
+::    本工具被设计用于 Dread Hunger 模组（mod）制作后的快速烘焙和打包。 
+::
+::                             版权所有 (C) 2023 爱佐
+::
+::    This program is free software: you can redistribute it and/or modify
+::    it under the terms of the GNU Affero General Public License as
+::    published by the Free Software Foundation, either version 3 of the
+::    License, or (at your option) any later version.
+::
+::    This program is distributed in the hope that it will be useful,
+::    but WITHOUT ANY WARRANTY; without even the implied warranty of
+::    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+::    GNU Affero General Public License for more details.
+::
+::    You should have received a copy of the GNU Affero General Public License
+::    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+::
+::    你也可以在此处阅读 GNU Affero 通用公共许可协议的非正式中文翻译： 
+::    https://www.chinasona.org/gnu/agpl-3.0-cn.html
+::    请注意，本翻译本仅为帮助中文使用者更好地理解 GNU Affero 通用公共许可 
+::    协议，不适用于使用 GNU Affero 通用公共许可协议发布的软件的法律声明。 
 
-REM                                DH 烘焙打包工具  
-REM
-REM    本工具被设计用于 Dread Hunger 模组（mod）制作后的快速烘焙和打包。
-REM
-REM                             版权所有 (C) 2023 爱佐
-REM
-REM    This program is free software: you can redistribute it and/or modify
-REM    it under the terms of the GNU Affero General Public License as
-REM    published by the Free Software Foundation, either version 3 of the
-REM    License, or (at your option) any later version.
-REM
-REM    This program is distributed in the hope that it will be useful,
-REM    but WITHOUT ANY WARRANTY; without even the implied warranty of
-REM    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-REM    GNU Affero General Public License for more details.
-REM
-REM    You should have received a copy of the GNU Affero General Public License
-REM    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-REM
-REM    你也可以在此处阅读 GNU Affero 通用公共许可协议的非正式中文翻译：
-REM    https://www.chinasona.org/gnu/agpl-3.0-cn.html
-REM    请注意，本翻译本仅为帮助中文使用者更好地理解 GNU Affero 通用公共许可协议，
-REM    不适用于使用 GNU Affero 通用公共许可协议发布的软件的法律声明。
+@echo off & setlocal
 
 chcp 65001 > nul
 
@@ -55,7 +55,7 @@ if "%PARAM%" == "--ue" (
         shift
         set UE_Program=%ARG%
     ) else (
-        echo 错误：未指定 UE 程序路径
+        echo 错误：未指定 UE 程序路径 
         exit /b 1
     )
 ) else if "%PARAM%" == "--project" (
@@ -65,7 +65,7 @@ if "%PARAM%" == "--ue" (
         shift
         set UE_Project=%ARG%
     ) else (
-        echo 错误：未指定项目路径
+        echo 错误：未指定项目路径 
         exit /b 1
     )
 ) else if "%PARAM%" == "--encrypt" (
@@ -85,7 +85,7 @@ if "%PARAM%" == "--ue" (
         shift
         set output_path=%ARG%
     ) else (
-        echo 错误：未指定输出路径
+        echo 错误：未指定输出路径 
         exit /b 1
     )
 ) else if "%PARAM%" == "--keep-shaders" (
@@ -133,7 +133,7 @@ call "%UE_Program%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun ^
     -nocompileeditor -installed -nop4 -cook -utf8output
 
 echo;
-echo 烘焙完成，开始打包
+echo 烘焙完成，开始打包 
 echo;
 
 :: Delete shaders to reduce package size, unless the user wants to keep them
@@ -142,7 +142,7 @@ if not "%keep_shaders%" == "1" (
     for /r "%script_dir%\project\Saved\Cooked\WindowsNoEditor\DreadHunger\Content\" %%I in (ShaderAssetInfo-*) do del "%%~dpI%%~nxI"
 ) else (
     echo;
-    echo '--keep-shaders 选项开启，将保留共享着色器'
+    echo --keep-shaders 选项开启，将保留共享着色器 
     echo;
 )
 
@@ -151,7 +151,7 @@ if not "%customize_packing_assets%" == "1" (
     echo "%script_dir%project\Saved\Cooked\WindowsNoEditor\DreadHunger\Content\*.*" "..\..\..\DreadHunger\Content\*.*" > "%script_dir%\configs\PAK-filelist.txt"
 ) else (
     echo;
-    echo '--customize-packing-assets 选项开启，将使用用户自定义的打包列表'
+    echo --customize-packing-assets 选项开启，将使用用户自定义的打包列表 
     echo;
 )
 
