@@ -46,8 +46,8 @@
 --encrypt [加密配置文件]    启用资产加密
                             如果指定了配置文件，则会用指定的文件
                             如果未指定配置文件，则会使用 configs\Crypto.json
+--pack-list [资产列表文件]  指定需要打包的资产列表
 --keep-shaders              保留共享着色器文件
---customize-packing-assets  自定义需要打包的资产
 ```
 
 ### 指定 UE 程序路径、项目路径和 .pak 文件的输出路径
@@ -90,9 +90,9 @@
 .\cook-and-pack.cmd --keep-shaders 
 ```
 
-### 自定义需要打包的资产
+### 指定需要打包的资产列表
 
-本工具默认只会打包 `Saved\Cooked\WindowsNoEditor\DreadHunger\Content\` 中的资产，即虚幻编辑器的文件管理器中可见的内容。有时候我们可能需要打包其他的内容，你可以编辑 `configs\PAK-filelist.txt` 文件，并启用 `--customize-packing-assets` 选项。
+本工具默认只会打包 `Saved\Cooked\WindowsNoEditor\DreadHunger\Content\` 中的资产，即虚幻编辑器的文件管理器中可见的内容。有时候我们可能需要打包其他的内容，你可以编辑资产列表文件，并启用 `--customize-packing-assets` 选项指定列表文件的位置。
 
 一个 `PAK-filelist.txt` 文件的示例如下：
 
@@ -103,11 +103,14 @@
 
 `PAK-filelist.txt` 中，每一行有 2 个路径。其中前一个路径是需要打包的文件，后一个路径是这些文件的挂载点。在挂载点路径中，`..\..\..\` 似乎是固定的前缀（笔者也并不了解其具体细节），此目录对应的即是项目烘焙出的 `Saved\Cooked\WindowsNoEditor\` 目录。被打包的文件相对于这一目录的路径，加上 `..\..\..\` 作为前缀，即是该项的挂载点。
 
-配置完 `PAK-filelist.txt` 文件后，你还需要在命令行中启用 `--customize-packing-assets` 选项：
+配置完 `PAK-filelist.txt` 文件后，你还需要在命令行中启用 `--pack-list` 选项：
 
 ``` Batch
-.\cook-and-pack.cmd --customize-packing-assets
+.\cook-and-pack.cmd --pack-list
+.\cook-and-pack.cmd --pack-list path\to\your\PAK-filelist.txt
 ```
+
+如果没有指定文件位置，脚本会默认使用 `configs\PAK-filelist.txt`。
 
 ### 覆盖项目的 `DefaultGame.ini` 设置
 

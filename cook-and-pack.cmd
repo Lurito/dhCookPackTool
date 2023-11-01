@@ -35,7 +35,7 @@ set "script_dir=%~dp0"
 set "output_path=_p.pak"
 set "encrypt_config="
 set "keep_shaders="
-set "customize_packing_assets="
+set "pack_list="
 
 :: Read command-line parameters
 echo 选项：%*
@@ -91,9 +91,15 @@ if "%PARAM%" == "--ue" (
 ) else if "%PARAM%" == "--keep-shaders" (
     shift
     set "keep_shaders=1"
-) else if "%PARAM%" == "--customize-packing-assets" (
+) else if "%PARAM%" == "--pack-list" (
     shift
-    set "customize_packing_assetss=1"
+    if not "%ARG%" == "" (
+        :: Path of pack files list is specified
+        shift
+        set pack_list=%ARG%
+    ) else (
+        set "pack_list=%script_dir%\configs\PAK-filelist.txt"
+    )
 ) else if "%PARAM%" == "" (
     goto endargs
 ) else (
@@ -147,11 +153,14 @@ if not "%keep_shaders%" == "1" (
 )
 
 :: Add cooked `Content` folder to PAK-filelist.txt, unless the user wants to customize it
-if not "%customize_packing_assets%" == "1" (
+if "%pack_list%" == "" (
+    :: Use default pack list
     echo "%script_dir%project\Saved\Cooked\WindowsNoEditor\DreadHunger\Content\*.*" "..\..\..\DreadHunger\Content\*.*" > "%script_dir%\configs\PAK-filelist.txt"
+    set "pack_list=%script_dir%\configs\PAK-filelist.txt"
 ) else (
     echo;
     echo --customize-packing-assets 选项开启，将使用用户自定义的打包列表
+    echo "%pack_list%"
     echo;
 )
 
@@ -166,10 +175,10 @@ if "%output_path:~1,2%" == ":\" (
 
 :: Pack cooked assets
 if "%encrypt_config%" == "" (
-    "%UE_Program%\Engine\Binaries\Win64\UnrealPak.exe" "%output_path%" -create="%script_dir%\configs\PAK-filelist.txt" -compress
+    "%UE_Program%\Engine\Binaries\Win64\UnrealPak.exe" "%output_path%" -create="%pack_list%" -compress
 ) else (
     :: Encrypted pak
-    "%UE_Program%\Engine\Binaries\Win64\UnrealPak.exe" "%output_path%" -create="%script_dir%\configs\PAK-filelist.txt" -compress -encrypt -encryptindex -cryptokeys=%encrypt_config%
+    "%UE_Program%\Engine\Binaries\Win64\UnrealPak.exe" "%output_path%" -create="%pack_list%" -compress -encrypt -encryptindex -cryptokeys=%encrypt_config%
 )
 
 :: Delete local .uproject file, avoiding from the local project displayed in UE homepage
